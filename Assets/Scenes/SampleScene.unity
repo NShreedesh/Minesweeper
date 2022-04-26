@@ -387,8 +387,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e70ab156d36920e419027c1c1fe23d6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 9
-  cols: 9
+  rows: 10
+  cols: 10
   size: 0.5
   tilePrefab: {fileID: 5881100158088004376, guid: cd0d5ae3687c49541a035b32deb24e2b, type: 3}
   cam: {fileID: 519420031}

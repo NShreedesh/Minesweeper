@@ -62,17 +62,11 @@ public class Board : MonoBehaviour
                 };
 
                 tileSpriteRendrer.sprite = GetTileSprite(cells[x, y]);
-
-
-                //Camera in middle tile position.
-                if(x == rows / 2 && y == cols / 2)
-                {
-                    Vector3 middleTile = tileGameObject.transform.position;
-                    middleTile.z = -10;
-                    cam.transform.position = middleTile;
-                }
             }
         }
+
+        Vector3 camInMiddle = new Vector3((float)((rows - 1) * 0.5 / 2), (float)((cols - 1) * 0.5 / 2), -10);
+        cam.transform.position = camInMiddle;
     }
 
     private void GenerateMines()
@@ -224,11 +218,13 @@ public class Board : MonoBehaviour
                 break;
             case Cell.Type.Empty:
                 Flooding(cell);
+                CheckForWin();
                 break;
             default:
                 cell.revealed = true;
                 Sprite tileSprite = GetTileSprite(cell);
                 cell.tileSpriteRenderer.sprite = tileSprite;
+                CheckForWin();
                 break;
         }
     }
@@ -236,13 +232,13 @@ public class Board : MonoBehaviour
     private void Explode(Cell cell)
     {
         cell.revealed = true;
-        cell.exploded = true; 
+        cell.exploded = true;
         Sprite tileSprite = GetTileSprite(cell);
         cell.tileSpriteRenderer.sprite = tileSprite;
 
-        for(int x = 0; x < rows; x++)
+        for (int x = 0; x < rows; x++)
         {
-            for(int y = 0; y < cols; y++)
+            for (int y = 0; y < cols; y++)
             {
                 cell = cells[x, y];
 
@@ -275,5 +271,22 @@ public class Board : MonoBehaviour
             Flooding(GetCell(cell.position.x, cell.position.y - 1));
             Flooding(GetCell(cell.position.x, cell.position.y + 1));
         }
+    }
+
+    private void CheckForWin()
+    {
+        for (int x = 0; x < rows; x++)
+        {
+            for (int y = 0; y < cols; y++)
+            {
+                Cell cell = cells[x, y];
+
+                if (cell.type != Cell.Type.Mine && !cell.revealed)
+                    return;
+            }
+        }
+
+        print("Winner");
+        GameManager.instance.ChangeState(GameState.Victory);
     }
 }
