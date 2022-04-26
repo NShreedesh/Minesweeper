@@ -10,8 +10,12 @@ public class GameManager : MonoBehaviour
 
     public GameState gameState;
 
+    [Header("UI Info")]
     [SerializeField] private GameObject gameOverCanvas;
+    [SerializeField] private Image winLoseImage;
     [SerializeField] private Button playButton;
+    [SerializeField] private Sprite winSprite;
+    [SerializeField] private Sprite loseSprite;
 
     private void Awake()
     {
@@ -56,11 +60,13 @@ public class GameManager : MonoBehaviour
 
     private void Victory()
     {
+        winLoseImage.sprite = winSprite;
         gameOverCanvas.gameObject.SetActive(true);
     }
 
     private void GameOver()
     {
+        winLoseImage.sprite = loseSprite;
         gameOverCanvas.gameObject.SetActive(true);
     }
 }

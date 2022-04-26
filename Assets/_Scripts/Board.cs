@@ -65,8 +65,13 @@ public class Board : MonoBehaviour
             }
         }
 
-        Vector3 camInMiddle = new Vector3((float)((rows - 1) * 0.5 / 2), (float)((cols - 1) * 0.5 / 2), -10);
+        Vector3 camInMiddle = new Vector3((float)((rows - 1) * size / 2), (float)((cols - 1) * size / 2), -10);
         cam.transform.position = camInMiddle;
+
+        //Camera resizing
+        Vector2 lastCell = cells[rows-1, cols-1].position;
+        lastCell = lastCell * size;
+        cam.orthographicSize = (lastCell.y + 1) / 2;
     }
 
     private void GenerateMines()
@@ -273,6 +278,15 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void Flag(Cell cell)
+    {
+        if (cell.type == Cell.Type.Invalid) return;
+
+        cell.flagged = !cell.flagged;
+        Sprite tileSprite = GetTileSprite(cell);
+        cell.tileSpriteRenderer.sprite = tileSprite;
+    }
+
     private void CheckForWin()
     {
         for (int x = 0; x < rows; x++)
@@ -286,7 +300,6 @@ public class Board : MonoBehaviour
             }
         }
 
-        print("Winner");
         GameManager.instance.ChangeState(GameState.Victory);
     }
 }
