@@ -55,19 +55,19 @@ public class GameManager : MonoBehaviour
 
     private void Play()
     {
-        gameOverCanvas.gameObject.SetActive(false);
+        gameOverCanvas.SetActive(false);
     }
 
     private void Victory()
     {
         winLoseImage.sprite = winSprite;
-        gameOverCanvas.gameObject.SetActive(true);
+        gameOverCanvas.SetActive(true);
     }
 
     private void GameOver()
     {
         winLoseImage.sprite = loseSprite;
-        gameOverCanvas.gameObject.SetActive(true);
+        gameOverCanvas.SetActive(true);
     }
 }
 public enum GameState

@@ -176,7 +176,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6
+  orthographic size: 434
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -252,10 +252,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e70ab156d36920e419027c1c1fe23d6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 6
-  cols: 12
+  rows: 10
+  cols: 16
   size: 0.5
   tilePrefab: {fileID: 5881100158088004376, guid: cd0d5ae3687c49541a035b32deb24e2b, type: 3}
+  buttonTilePrefab: {fileID: 5881100158088004376, guid: 60e9731ebc608334ba377b4a1ffd6aaf, type: 3}
   cam: {fileID: 519420031}
   tile1: {fileID: 21300000, guid: 13550359be4320f4ab812f3c7470caf3, type: 3}
   tile2: {fileID: 21300000, guid: 493f8cb5c0fb25a408d622643355f0e6, type: 3}
@@ -270,7 +271,11 @@ MonoBehaviour:
   tileMine: {fileID: 21300000, guid: 2db002d9e1911124da30ade80e124f91, type: 3}
   tileExploded: {fileID: 21300000, guid: df8c685e37a75754f8ff042db08c3b30, type: 3}
   tileFlag: {fileID: 21300000, guid: a5936b3fa2d1dc84f94f36b1af901874, type: 3}
-  howManyMines: 10
+  howManyMines: 30
+  buttonSprites:
+  - {fileID: 0}
+  - {fileID: 0}
+  buttonState: 0000000001000000
 --- !u!114 &542214698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,6 +292,9 @@ MonoBehaviour:
   cellLayer:
     serializedVersion: 2
     m_Bits: 64
+  cellButtonLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &629754844
 GameObject:
   m_ObjectHideFlags: 0

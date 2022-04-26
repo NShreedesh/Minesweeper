@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Board : MonoBehaviour
@@ -10,6 +11,7 @@ public class Board : MonoBehaviour
 
     [Header("Tile Info")]
     [SerializeField] private GameObject tilePrefab;
+    [SerializeField] private GameObject buttonTilePrefab;
 
     [Header("Camera Info")]
     public Camera cam;
@@ -32,6 +34,21 @@ public class Board : MonoBehaviour
     [Header("Generating Tile Values Info")]
     [SerializeField] private int howManyMines = 12;
 
+    [Header("Button Generation Info")]
+    [SerializeField] private Sprite[] buttonSprites = new Sprite[2];
+    [SerializeField] private ButtonTile.State[] buttonState = new ButtonTile.State[2];
+
+    private void OnValidate()
+    {
+        howManyMines = Mathf.Clamp(howManyMines, 0, rows * cols);
+    }
+
+    private void Awake()
+    {
+        buttonSprites[0] = tile1;
+        buttonSprites[1] = tileFlag;
+    }
+
     private void Start()
     {
         cells = new Cell[rows, cols];
@@ -41,7 +58,7 @@ public class Board : MonoBehaviour
         GenerateNumbers();
     }
 
-    private void GenerateTiles()
+    private async void GenerateTiles()
     {
         for (int x = 0; x < rows; x++)
         {
@@ -65,16 +82,38 @@ public class Board : MonoBehaviour
             }
         }
 
-        Vector3 camInMiddle = new Vector3((float)((rows - 1) * size / 2), (float)((cols - 1) * size / 2), -10);
+        //Button Spawn
+        for (int i = -1; i < 1; i++)
+        {
+            Vector2 position = new Vector3((((rows - 1) * size) / 2) + ((size + 0.1f) * i), (cols * size) + 0.2f);
+            GameObject button = Instantiate(buttonTilePrefab, position, Quaternion.identity, transform);
+            button.transform.localScale = new Vector2(size, size);
+            SpriteRenderer tileSpriteRendrer = button.GetComponent<SpriteRenderer>();
+            tileSpriteRendrer.sprite = buttonSprites[i + 1];
+            ButtonTile buttonTile = button.GetComponent<ButtonTile>();
+            buttonTile.state = buttonState[i + 1];
+        }
+
+
+        Vector3 camInMiddle = new((float)((rows - 1) * size / 2), (float)((cols - 1) * size / 2), -10);
         cam.transform.position = camInMiddle;
 
         //Camera resizing
-        Vector2 lastCell = cells[rows-1, cols-1].position;
-        lastCell = lastCell * size;
-        cam.orthographicSize = (lastCell.y + 1) / 2;
+        Vector2 lastCell = cells[rows - 1, cols - 1].position;
+        lastCell *= size;
+        cam.orthographicSize = (lastCell.y + 3) / 2;
+
+        //Camera Fit the horizontal size
+        Vector2 leftEdge = cam.ViewportToWorldPoint(Vector3.zero);
+        while(leftEdge.x >= cells[0, 0].position.x - 0.5f)
+        {
+            cam.orthographicSize++;
+            leftEdge = cam.ViewportToWorldPoint(Vector3.zero);
+            await Task.Yield();
+        }
     }
 
-    private void GenerateMines()
+    private async void GenerateMines()
     {
         for (int i = 0; i < howManyMines; i++)
         {
@@ -95,6 +134,8 @@ public class Board : MonoBehaviour
                         y = 0;
                     }
                 }
+
+                await Task.Yield();
             }
 
             Cell cell = cells[x, y];
@@ -251,8 +292,7 @@ public class Board : MonoBehaviour
                 {
                     cell.revealed = true;
                     cell.exploded = true;
-                    tileSprite = GetTileSprite(cell);
-                    cell.tileSpriteRenderer.sprite = tileSprite;
+                    cell.tileSpriteRenderer.sprite = tileExploded;
                 }
             }
         }
@@ -263,6 +303,7 @@ public class Board : MonoBehaviour
     private void Flooding(Cell cell)
     {
         if (cell.revealed) return;
+        if (cell.flagged) return;
         if (cell.type == Cell.Type.Mine || cell.type == Cell.Type.Invalid) return;
 
         cell.revealed = true;

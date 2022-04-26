@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 5881100158088004374}
   - component: {fileID: 5881100158088004375}
   - component: {fileID: 5881100158088004373}
-  m_Layer: 6
-  m_Name: Tile
+  - component: {fileID: -1975564223162384834}
+  m_Layer: 7
+  m_Name: Button Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,3 +112,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-1975564223162384834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5881100158088004376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61c32a2fb551c9f49b93db48c867e604, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

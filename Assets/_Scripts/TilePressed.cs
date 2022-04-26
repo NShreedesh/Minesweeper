@@ -5,40 +5,51 @@ public class TilePressed : MonoBehaviour
 {
     [SerializeField] private Board board;
     [SerializeField] private LayerMask cellLayer;
+    [SerializeField] private LayerMask cellButtonLayer;
+
+    private Cell selectedCell;
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && GameManager.Instance.gameState == GameState.Play)
+        if (GameManager.Instance.gameState != GameState.Play) return;
+
+        if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorldPosition = board.cam.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hitInfo = Physics2D.Raycast(mouseWorldPosition, Vector2.zero, cellLayer);
+            RaycastHit2D hitInfoForTile = Physics2D.Raycast(mouseWorldPosition, Vector2.zero, 1000, cellLayer);
+            RaycastHit2D hitInfoForTileButton = Physics2D.Raycast(mouseWorldPosition, Vector2.zero, 1000, cellButtonLayer);
 
-            if (hitInfo)
+            if (hitInfoForTile)
             {
-                Vector2Int tileGridPosition = board.WorldToGridPoint(hitInfo.transform.position);
-                Cell selectedCell = board.cells[tileGridPosition.x, tileGridPosition.y];
-
-                if(!selectedCell.revealed)
+                if(selectedCell != null)
                 {
-                    board.ShowTiles(selectedCell);
+                    selectedCell.tileSpriteRenderer.color = Color.white;
+                    selectedCell = null;
                 }
+                Vector2Int tileGridPosition = board.WorldToGridPoint(hitInfoForTile.transform.position);
+                selectedCell = board.cells[tileGridPosition.x, tileGridPosition.y];
+                selectedCell.tileSpriteRenderer.color = Color.grey;
             }
-        }
 
-        if (Input.GetMouseButtonDown(1) && GameManager.Instance.gameState == GameState.Play)
-        {
-            Vector3 mouseWorldPosition = board.cam.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hitInfo = Physics2D.Raycast(mouseWorldPosition, Vector2.zero, cellLayer);
-
-            if (hitInfo)
+            else if (hitInfoForTileButton)
             {
-                Vector2Int tileGridPosition = board.WorldToGridPoint(hitInfo.transform.position);
-                Cell selectedCell = board.cells[tileGridPosition.x, tileGridPosition.y];
+                if (selectedCell == null) return;
+                if (selectedCell.revealed) return;
 
-                if (!selectedCell.revealed)
+                ButtonTile buttonTile = hitInfoForTileButton.transform.GetComponent<ButtonTile>();
+
+                switch (buttonTile.state)
                 {
-                    board.Flag(selectedCell);
+                    case ButtonTile.State.Number:
+                        board.ShowTiles(selectedCell);
+                        break;
+                    case ButtonTile.State.Flag:
+                        board.Flag(selectedCell);
+                        break;
                 }
+
+                selectedCell.tileSpriteRenderer.color = Color.white;
+                selectedCell = null;
             }
         }
     }
