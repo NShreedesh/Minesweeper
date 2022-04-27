@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class TilePressed : MonoBehaviour
@@ -21,7 +20,7 @@ public class TilePressed : MonoBehaviour
 
             if (hitInfoForTile)
             {
-                if(selectedCell != null)
+                if (selectedCell != null)
                 {
                     selectedCell.tileSpriteRenderer.color = Color.white;
                     selectedCell = null;

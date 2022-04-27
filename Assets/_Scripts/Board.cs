@@ -58,7 +58,7 @@ public class Board : MonoBehaviour
         GenerateNumbers();
     }
 
-    private async void GenerateTiles()
+    private void GenerateTiles()
     {
         for (int x = 0; x < rows; x++)
         {
@@ -109,11 +109,10 @@ public class Board : MonoBehaviour
         {
             cam.orthographicSize++;
             leftEdge = cam.ViewportToWorldPoint(Vector3.zero);
-            await Task.Yield();
         }
     }
 
-    private async void GenerateMines()
+    private void GenerateMines()
     {
         for (int i = 0; i < howManyMines; i++)
         {
@@ -134,8 +133,6 @@ public class Board : MonoBehaviour
                         y = 0;
                     }
                 }
-
-                await Task.Yield();
             }
 
             Cell cell = cells[x, y];
@@ -261,14 +258,17 @@ public class Board : MonoBehaviour
         {
             case Cell.Type.Mine:
                 Explode(cell);
+                SoundManager.Instance.PlayEffect(SoundManager.Instance.wrongAudioClip);
                 break;
             case Cell.Type.Empty:
                 Flooding(cell);
+                SoundManager.Instance.PlayEffect(SoundManager.Instance.clickAudioClip);
                 CheckForWin();
                 break;
             default:
                 cell.revealed = true;
                 Sprite tileSprite = GetTileSprite(cell);
+                SoundManager.Instance.PlayEffect(SoundManager.Instance.clickAudioClip);
                 cell.tileSpriteRenderer.sprite = tileSprite;
                 CheckForWin();
                 break;
@@ -326,6 +326,15 @@ public class Board : MonoBehaviour
         cell.flagged = !cell.flagged;
         Sprite tileSprite = GetTileSprite(cell);
         cell.tileSpriteRenderer.sprite = tileSprite;
+
+        if (cell.flagged)
+        {
+            SoundManager.Instance.PlayEffect(SoundManager.Instance.flagAudioClip);
+        }
+        else
+        {
+            SoundManager.Instance.PlayEffect(SoundManager.Instance.unflagAudioClip);
+        }
     }
 
     private void CheckForWin()
