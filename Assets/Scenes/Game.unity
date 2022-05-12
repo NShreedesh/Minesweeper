@@ -737,8 +737,6 @@ MonoBehaviour:
   flagAudioClip: {fileID: 8300000, guid: 1858c44ae6cb5e34084ec0f52c047067, type: 3}
   unflagAudioClip: {fileID: 8300000, guid: 5967158afa1776a4d9aa7acadb4c1408, type: 3}
   wrongAudioClip: {fileID: 8300000, guid: 8da1ebb90d2ebf749997cba2a89bbf33, type: 3}
-  gameOverAudioClip: {fileID: 8300000, guid: 62cda3e336415e54fb4f7cc092456144, type: 3}
-  gameWinAudioClip: {fileID: 8300000, guid: 981fd9d3967e8ac4492931d59685277d, type: 3}
 --- !u!82 &1824735591
 AudioSource:
   m_ObjectHideFlags: 0
