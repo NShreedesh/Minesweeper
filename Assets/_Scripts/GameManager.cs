@@ -19,9 +19,21 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        ChangeFrameRate();
+
         if (instance != null)
             Destroy(this);
         instance = this;
+    }
+
+    private void ChangeFrameRate()
+    {
+        if(Application.platform == RuntimePlatform.Android ||
+            Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 60;
+        }
     }
 
     private void Start()
